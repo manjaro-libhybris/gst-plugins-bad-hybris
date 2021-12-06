@@ -6,7 +6,7 @@ pkgver=1.18.5
 pkgrel=3
 pkgdesc="Multimedia graph framework - bad plugins"
 url="https://gstreamer.freedesktop.org/"
-arch=(x86_64)
+arch=(x86_64 aarch64)
 license=(LGPL)
 depends=(gst-plugins-base-libs orc libdrm libx11 libgudev libusb libvdpau
          libxkbcommon-x11)
