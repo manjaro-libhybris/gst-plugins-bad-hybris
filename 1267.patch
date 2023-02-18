@@ -16,7 +16,7 @@ index bf49be9111..abd9763649 100644
 +++ b/subprojects/gst-plugins-bad/ext/neon/meson.build
 @@ -1,4 +1,4 @@
 -neon_dep = dependency('neon', version: ['>= 0.27', '<= 0.31.99'],
-+neon_dep = dependency('neon', version: ['>= 0.27', '<= 0.32.99'],
++neon_dep = dependency('neon', version: ['>= 0.27', '<= 0.33.99'],
                        required : get_option('neon'))
  
  if neon_dep.found()

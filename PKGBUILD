@@ -1,8 +1,9 @@
-# Maintainer: Erik Inkinen <erik.inkinen@gmail.com>
+# Maintainer: Bardia Moshiri <fakeshell@bardia.tech>
+# Contributor: Erik Inkinen <erik.inkinen@gmail.com>
 
 pkgbase=gst-plugins-bad-hybris
-pkgname=(gst-plugins-bad-libs-hybris gst-plugins-bad-hybris gst-plugin-opencv-hybris gst-plugin-wpe-hybris)
-pkgver=1.18.5
+pkgname=(gst-plugins-bad-libs-hybris gst-plugins-bad-hybris gst-plugin-wpe-hybris)
+pkgver=1.22.0
 pkgrel=3
 pkgdesc="Multimedia graph framework - bad plugins"
 url="https://gstreamer.freedesktop.org/"
@@ -19,31 +20,26 @@ makedepends=(mjpegtools curl chromaprint libmms faad2 libdca libdvdnav
              librsvg fluidsynth lilv lv2 gst-plugins-good python git
              gobject-introspection vulkan-headers vulkan-validation-layers
              wayland-protocols gtk3 meson shaderc libavtp libmicrodns
-             zxing-cpp opencv libva wpewebkit)
+             libva wpewebkit)
 checkdepends=(xorg-server-xvfb)
 options=(!emptydirs)
 _commit=d3af58d5b31941caa26c3ded85d7a7b84a91f0cc  # tags/1.18.5^0
 source=("git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git#commit=$_commit"
         1267.patch wpe-1.1.diff)
 sha256sums=('SKIP'
-            '6b44a256d1ce3ed788d689a9abc5d8a2c4f992ce3c6c60f7a1efb4aa5cc3deb1'
-            '841988d7dffaf98adeff046cfeed97505a66d268c156361ac29c2b7a112cf984')
+            'SKIP'
+            'SKIP')
 
 prepare() {
   mv gst-plugins-bad $pkgbase
   cd $pkgbase
 
-  # Neon 0.32.x
+  # Neon 0.33.x
   # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/1267
   patch -Np3 -i ../1267.patch
 
   # wpe-webkit-1.1 (libsoup3)
   patch -Np1 -i ../wpe-1.1.diff
-}
-
-pkgver() {
-  cd $pkgbase
-  git describe --tags | sed 's/-/+/g'
 }
 
 build() {
@@ -66,6 +62,9 @@ build() {
     -D voamrwbenc=disabled \
     -D wasapi2=disabled \
     -D wasapi=disabled \
+    -D opencv=disabled \
+    -D teletext=disabled \
+    -D zxing=disabled \
     -D gobject-cast-checks=disabled \
     -D package-name="GStreamer Bad Plugins (Manjaro ARM on Halium)" \
     -D package-origin="https://www.manjaro.org/"
@@ -95,18 +94,13 @@ package_gst-plugins-bad-libs-hybris() {
             hls kate ladspa lv2 mms modplug mpeg2enc mplex musepack \
             neonhttpsrc ofa openal openexr openjpeg opusparse resindvd rsvg \
             rtmp sbc sctp smoothstreaming sndfile soundtouch spandsp srt srtp \
-            teletext ttmlsubs vulkan waylandsink webp webrtc webrtcdsp \
-            wildmidi x265 zbar va avtp zxing microdns; do
+            ttmlsubs vulkan waylandsink webp webrtc webrtcdsp \
+            wildmidi x265 zbar va avtp microdns; do
     _x="lib/gstreamer-1.0/libgst${_x}.so"
     mv "$pkgdir/usr/$_x" "ext/$_x"
   done
 
-  mkdir -p opencv/{lib,include/gstreamer-1.0/gst}
-  mv -t opencv/lib "$pkgdir"/usr/lib/*opencv*
-  mv -t opencv/include/gstreamer-1.0/gst \
-    "$pkgdir"/usr/include/gstreamer-1.0/gst/opencv
-
-  for _x in opencv wpe; do
+  for _x in wpe; do
     mkdir -p "$_x/lib/gstreamer-1.0"
     _f="lib/gstreamer-1.0/libgst${_x}.so"
     mv "$pkgdir/usr/$_f" "$_x/$_f"
@@ -122,21 +116,12 @@ package_gst-plugins-bad-hybris() {
            libdvdread librsvg rtmpdump sbc libsndfile soundtouch spandsp srt
            libsrtp zvbi vulkan-icd-loader libxcb wayland libwebp libnice
            webrtc-audio-processing wildmidi x265 zbar libavtp
-           libmicrodns zxing-cpp libva)
+           libmicrodns libva)
   optdepends=('nvidia-utils: nvcodec plugin')
   provides=("gst-plugins-bad=$pkgver")
   conflicts=("gst-plugins-bad")
 
   mv ext "$pkgdir/usr"
-}
-
-package_gst-plugin-opencv-hybris() {
-  pkgdesc="${pkgdesc%-*}- opencv plugin"
-  depends=(gst-plugins-base-libs opencv)
-  provides=("gst-plugin-opencv=$pkgver")
-  conflicts=("gst-plugin-opencv")
-
-  mv opencv "$pkgdir/usr"
 }
 
 package_gst-plugin-wpe-hybris() {
