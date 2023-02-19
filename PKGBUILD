@@ -25,21 +25,20 @@ checkdepends=(xorg-server-xvfb)
 options=(!emptydirs)
 _commit=d3af58d5b31941caa26c3ded85d7a7b84a91f0cc  # tags/1.18.5^0
 source=("git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git#commit=$_commit"
-        1267.patch wpe-1.1.diff)
+        0001-neon-v0.33.99.patch 0002-wpe-v1.1.patch)
 sha256sums=('SKIP'
-            'SKIP'
-            'SKIP')
+            'be04b0609c6ea24cf2b2e65bad52bf3c209e859ffb348008f0d5d4d3719f6753'
+            '841988d7dffaf98adeff046cfeed97505a66d268c156361ac29c2b7a112cf984')
 
 prepare() {
   mv gst-plugins-bad $pkgbase
   cd $pkgbase
 
   # Neon 0.33.x
-  # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/1267
-  patch -Np3 -i ../1267.patch
+  patch -Np3 -i ../0001-neon-v0.33.99.patch
 
   # wpe-webkit-1.1 (libsoup3)
-  patch -Np1 -i ../wpe-1.1.diff
+  patch -Np1 -i ../0002-wpe-v1.1.patch
 }
 
 build() {
