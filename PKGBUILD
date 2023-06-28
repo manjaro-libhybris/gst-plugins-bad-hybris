@@ -3,7 +3,7 @@
 
 pkgbase=gst-plugins-bad-hybris
 pkgname=(gst-plugins-bad-libs-hybris gst-plugins-bad-hybris gst-plugin-wpe-hybris)
-pkgver=1.22.0
+pkgver=1.22.4
 pkgrel=3
 pkgdesc="Multimedia graph framework - bad plugins"
 url="https://gstreamer.freedesktop.org/"
